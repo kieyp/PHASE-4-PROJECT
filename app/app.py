@@ -82,31 +82,6 @@ def update_power(id):
 
 # Route to create a new HeroPower
 @app.route('/hero_powers', methods=['POST'])
-# def create_hero_power():
-#     data = request.get_json()
-#     if all(key in data for key in ('strength', 'power_id', 'hero_id')):
-#         strength = data['strength']
-#         power_id = data['power_id']
-#         hero_id = data['hero_id']
-#         hero_power = HeroPower(strength=strength, power_id=power_id, hero_id=hero_id)
-#         try:
-#             db.session.add(hero_power)
-#             db.session.commit()
-#             hero = Hero.query.get(hero_id)
-#             hero_data = {
-#                 'id': hero.id,
-#                 'name': hero.name,
-#                 'super_name': hero.super_name,
-#                 'powers': [{'id': hero_power.power.id, 'name': hero_power.power.name, 'description': hero_power.power.description} for hero_power in hero.hero_powers]
-#             }
-#             return jsonify(hero_data), 201
-#         except:
-#             db.session.rollback()
-#             return jsonify({'errors': ['validation errors']}), 400
-#     else:
-#         return jsonify({'error': 'Missing required fields (strength, power_id, hero_id)'}), 400
-
-
 
 def create_hero_power():
     data = request.json
