@@ -12,11 +12,10 @@ function Home() {
 
   return (
     <section>
-      <h2>All Heroes</h2>
+      <h2>Blog Post Home</h2>
       <ul>
         {heros.map((hero) => (
           <li key={hero.id}>
-            <Link to={`/heroes/${hero.id}`}>{hero.super_name}</Link>
           </li>
         ))}
       </ul>
