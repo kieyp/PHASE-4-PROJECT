@@ -1,6 +1,5 @@
 import { Switch, Route } from "react-router-dom";
 import Header from "./Header";
-import Hero from "./Hero";
 import Home from "./Home";
 import BlogArticle from "./BlogArticle"; 
 import ArticleList from "./ArticleList";
