@@ -1,20 +1,23 @@
-TECH 2DAY
+                  TECH 2DAY
 Introduction
+
 Welcome to Tech 2Day! This project is a specialized blog platform designed for software engineering enthusiasts. Its primary goal is to provide a centralized hub for software engineers, students, and tech enthusiasts to access informative articles, stay updated on the latest trends, and collaborate with others in the field.
 
-Features
-User Authentication and Authorization: Secure user authentication system ensures only authorized users can access and contribute to the platform.
+                    Features
+(i) User Authentication and Authorization: Secure user authentication system ensures only authorized users can access and contribute to the platform.
 
-CRUD Operations for Articles and Comments: Users can create, read, update, and delete articles and comments, facilitating dynamic content management.
+(ii) CRUD Operations for Articles and Comments: Users can create, read, update, and delete articles and comments, facilitating dynamic content management.
 
-Association Between Authors and Articles: Authors are associated with their respective articles, enabling seamless attribution and organization of content.
+(iii) Association Between Authors and Articles: Authors are associated with their respective articles, enabling seamless attribution and organization of content.
 
-RESTful API Endpoints: The project offers RESTful API endpoints for accessing and manipulating data, providing flexibility for integration with other systems or applications.
+(iv) RESTful API Endpoints: The project offers RESTful API endpoints for accessing and manipulating data, providing flexibility for integration with other systems or applications.
 
 Installation
 To install and run the project locally, follow these steps:
 
-Clone the repository:
+
+
+    Clone the repository:
 
 shell
 Copy code
@@ -22,10 +25,13 @@ $ git clone https://github.com/your_username/tech-2day.git
 $ cd tech-2day
 Install dependencies:
 
+
 shell
+
 Copy code
 $ pip install -r requirements.txt
 Set up the project environment:
+
 
 shell
 Copy code
@@ -33,9 +39,13 @@ $ export FLASK_APP=app.py
 $ export FLASK_ENV=development
 Run the application:
 
+
 shell
 Copy code
 $ flask run
+
+
+
 Usage
 Once the project is installed and running, users can access the platform via their web browser or integrate with the provided API endpoints. Ensure to configure any necessary environment variables or settings according to your deployment environment.
 
