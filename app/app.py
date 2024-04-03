@@ -174,6 +174,7 @@ api.add_resource(CommentsResource, '/comments')
 api.add_resource(CommentResource, '/comments/<int:comment_id>')
 api.add_resource(UsersResource, '/users')
 api.add_resource(UserResource, '/users/<int:user_id>')
-
+api.add_resource(AuthorsResource, '/authors')
+api.add_resource(AuthorResource, '/articles/<int:article_id>')
 if __name__ == '__main__':
     app.run(debug=True)
