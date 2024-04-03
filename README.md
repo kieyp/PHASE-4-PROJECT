@@ -1,261 +1,93 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/a0TIMikJ)
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-718a45dd9cf7e7f842a935f5ebbe5719a5e09af4491e668f4dbf3b35d5cca122.svg)](https://classroom.github.com/online_ide?assignment_repo_id=14339464&assignment_repo_type=AssignmentRepo)
-# Flask Code Challenge - Superheroes
+TECH 2DAY
+Introduction
+Welcome to Tech 2Day! This project is a specialized blog platform designed for software engineering enthusiasts. Its primary goal is to provide a centralized hub for software engineers, students, and tech enthusiasts to access informative articles, stay updated on the latest trends, and collaborate with others in the field.
 
-For this assessment, you'll be working on an API for tracking heroes and their
-superpowers.
+Features
+User Authentication and Authorization: Secure user authentication system ensures only authorized users can access and contribute to the platform.
 
-In this repo, there is a Flask application with some features built out. There
-is also a fully built React frontend application, so you can test if your API is
-working.
+CRUD Operations for Articles and Comments: Users can create, read, update, and delete articles and comments, facilitating dynamic content management.
 
-Your job is to build out the Flask API to add the functionality described in the
-deliverables below.
+Association Between Authors and Articles: Authors are associated with their respective articles, enabling seamless attribution and organization of content.
 
-## Setup
+RESTful API Endpoints: The project offers RESTful API endpoints for accessing and manipulating data, providing flexibility for integration with other systems or applications.
 
-To download the dependencies for the frontend and backend, run:
+Installation
+To install and run the project locally, follow these steps:
 
-```sh
-pipenv install
-npm install --prefix client
-```
+Clone the repository:
 
-There is some starter code in the `app/seed.py` file so that once you've
-generated the models, you'll be able to create data to test your application.
+shell
+Copy code
+$ git clone https://github.com/your_username/tech-2day.git
+$ cd tech-2day
+Install dependencies:
 
-You can run your Flask API on [`localhost:5555`](http://localhost:5555) by running:
+shell
+Copy code
+$ pip install -r requirements.txt
+Set up the project environment:
 
-```sh
-python app.py
-```
+shell
+Copy code
+$ export FLASK_APP=app.py
+$ export FLASK_ENV=development
+Run the application:
 
-You can run your React app on [`localhost:4000`](http://localhost:4000) by running:
+shell
+Copy code
+$ flask run
+Usage
+Once the project is installed and running, users can access the platform via their web browser or integrate with the provided API endpoints. Ensure to configure any necessary environment variables or settings according to your deployment environment.
 
-```sh
-npm start --prefix client
-```
+Endpoints
+The Flask application provides the following API endpoints:
 
-You are not being assessed on React, and you don't have to update any of the React
-code; the frontend code is available just so that you can test out the behavior
-of your API in a realistic setting.
+/authors
 
-There are also tests included which you can run using `pytest -x` to check your work.
+GET: Retrieve a list of all authors.
+POST: Create a new author.
+/authors/<username>
 
-Depending on your preference, you can either check your progress by:
+GET: Retrieve details of a specific author by username.
+/articles
 
-- Running `pytest -x` and seeing if your code passes the tests
-- Running the React application in the browser and interacting with the API via
-  the frontend
-- Running the Flask server and using Postman to make requests
+GET: Retrieve a list of all articles.
+POST: Create a new article.
+/articles/<article_id>
 
-## Models
+GET: Retrieve details of a specific article by ID.
+PUT: Update an existing article.
+DELETE: Delete an article.
+/comments
 
-You need to create the following relationships:
+GET: Retrieve a list of all comments.
+POST: Create a new comment.
+/comments/<comment_id>
 
-- A `Hero` has many `Power`s through `HeroPower`
-- A `Power` has many `Hero`s through `HeroPower`
-- A `HeroPower` belongs to a `Hero` and belongs to a `Power`
+GET: Retrieve details of a specific comment by ID.
+PUT: Update an existing comment.
+DELETE: Delete a comment.
+Database Models
+Author Model
+Attributes: id, fullname, username
+Relationships: articles (many-to-many)
+Article Model
+Attributes: id, title, body, published_at, edited_at
+Relationships: comments (one-to-many)
+Comments Model
+Attributes: id, text, article_id
+Relationships: article (many-to-one)
+Dependencies
+The project relies on the following external libraries or dependencies:
 
-Start by creating the models and migrations for the following database tables:
+Flask
+Flask-Restful
+Flask-SQLAlchemy
+...
+Contributing
+Contributions to the project are welcome! If you encounter any issues or have suggestions for improvements, please open an issue or submit a pull request following our contribution guidelines and coding standards.
 
-![domain diagram](domain.png)
+License
+This project is distributed under the MIT License. Feel free to use, modify, and distribute the project according to the terms specified in the license.
 
-Add any code needed in the model files to establish the relationships.
-
-Then, run the migrations and seed file:
-
-```sh
-flask db upgrade
-python app/seed.py
-```
-
-> If you aren't able to get the provided seed file working, you are welcome to
-> generate your own seed data to test the application.
-
-## Validations
-
-Add validations to the `HeroPower` model:
-
-- `strength` must be one of the following values: 'Strong', 'Weak', 'Average'
-
-Add validations to the `Power` model:
-
-- `description` must be present and at least 20 characters long
-
-## Routes
-
-Set up the following routes. Make sure to return JSON data in the format
-specified along with the appropriate HTTP verb.
-
-### GET /heroes
-
-Return JSON data in the format below:
-
-```json
-[
-  { "id": 1, "name": "Kamala Khan", "super_name": "Ms. Marvel" },
-  { "id": 2, "name": "Doreen Green", "super_name": "Squirrel Girl" },
-  { "id": 3, "name": "Gwen Stacy", "super_name": "Spider-Gwen" }
-]
-```
-
-### GET /heroes/:id
-
-If the `Hero` exists, return JSON data in the format below:
-
-```json
-{
-  "id": 1,
-  "name": "Kamala Khan",
-  "super_name": "Ms. Marvel",
-  "powers": [
-    {
-      "id": 1,
-      "name": "super strength",
-      "description": "gives the wielder super-human strengths"
-    },
-    {
-      "id": 2,
-      "name": "flight",
-      "description": "gives the wielder the ability to fly through the skies at supersonic speed"
-    }
-  ]
-}
-```
-
-If the `Hero` does not exist, return the following JSON data, along with
-the appropriate HTTP status code:
-
-```json
-{
-  "error": "Hero not found"
-}
-```
-
-### GET /powers
-
-Return JSON data in the format below:
-
-```json
-[
-  {
-    "id": 1,
-    "name": "super strength",
-    "description": "gives the wielder super-human strengths"
-  },
-  {
-    "id": 1,
-    "name": "flight",
-    "description": "gives the wielder the ability to fly through the skies at supersonic speed"
-  }
-]
-```
-
-### GET /powers/:id
-
-If the `Power` exists, return JSON data in the format below:
-
-```json
-{
-  "id": 1,
-  "name": "super strength",
-  "description": "gives the wielder super-human strengths"
-}
-```
-
-If the `Power` does not exist, return the following JSON data, along with
-the appropriate HTTP status code:
-
-```json
-{
-  "error": "Power not found"
-}
-```
-
-### PATCH /powers/:id
-
-This route should update an existing `Power`. It should accept an object with
-the following properties in the body of the request:
-
-```json
-{
-  "description": "Updated description"
-}
-```
-
-If the `Power` exists and is updated successfully (passes validations), update
-its description and return JSON data in the format below:
-
-```json
-{
-  "id": 1,
-  "name": "super strength",
-  "description": "Updated description"
-}
-```
-
-If the `Power` does not exist, return the following JSON data, along with
-the appropriate HTTP status code:
-
-```json
-{
-  "error": "Power not found"
-}
-```
-
-If the `Power` is **not** updated successfully (does not pass validations),
-return the following JSON data, along with the appropriate HTTP status code:
-
-```json
-{
-  "errors": ["validation errors"]
-}
-```
-
-### POST /hero_powers
-
-This route should create a new `HeroPower` that is associated with an
-existing `Power` and `Hero`. It should accept an object with the following
-properties in the body of the request:
-
-```json
-{
-  "strength": "Average",
-  "power_id": 1,
-  "hero_id": 3
-}
-```
-
-If the `HeroPower` is created successfully, send back a response with the data
-related to the `Hero`:
-
-```json
-{
-  "id": 1,
-  "name": "Kamala Khan",
-  "super_name": "Ms. Marvel",
-  "powers": [
-    {
-      "id": 1,
-      "name": "super strength",
-      "description": "gives the wielder super-human strengths"
-    },
-    {
-      "id": 2,
-      "name": "flight",
-      "description": "gives the wielder the ability to fly through the skies at supersonic speed"
-    }
-  ]
-}
-```
-
-If the `HeroPower` is **not** created successfully, return the following
-JSON data, along with the appropriate HTTP status code:
-
-```json
-{
-  "errors": ["validation errors"]
-}
-```
-# PHASE-4-PROJECT
+Feel free to customize this README to fit the specific details and requirements of your project. Include any additional sections or information that you think would be helpful for users or contributors.
