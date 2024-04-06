@@ -3,6 +3,8 @@ from flask_restful import Api, Resource, reqparse
 from flask_migrate import Migrate
 from models import Article, Author, Comments, User
 from db import connection_string, db
+from sqlalchemy.orm import joinedload
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = connection_string
@@ -57,9 +59,40 @@ class AuthorResource(Resource):
 
 
 class ArticlesResource(Resource):
+
     def get(self):
-        articles = Article.query.all()
-        return jsonify([{'title': article.title, 'body': article.body} for article in articles])
+        page = request.args.get('page', 1, type=int)
+        per_page = request.args.get('per_page', 10, type=int)
+
+        articles = Article.query.options(joinedload(Article.comments).joinedload(Comments.user))\
+                              .paginate(page=page, per_page=per_page)
+
+        articles_data = []
+        for article in articles.items:
+            article_data = {
+                'id': article.id,
+                'title': article.title,
+                'body': article.body,
+                'comments': [
+                    {
+                        'id': comment.id,
+                        'text': comment.text,
+                        'user': {
+                            'id': comment.user.id,
+                            'name': comment.user.name,
+                            'contact': comment.user.contact,
+                            'email': comment.user.email
+                        }
+                    } for comment in article.comments
+                ]
+            }
+            articles_data.append(article_data)
+
+        return jsonify({
+            'articles': articles_data,
+            'total_pages': articles.pages
+        })
+
 
     def post(self):
         data = request.json
@@ -74,6 +107,8 @@ class ArticleResource(Resource):
         if article:
             return jsonify({'title': article.title, 'body': article.body})
         return jsonify({'message': 'Article not found'}), 404
+    
+    
 
     def delete(self, article_id):
         article = Article.query.get(article_id)
