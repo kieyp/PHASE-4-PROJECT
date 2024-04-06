@@ -4,6 +4,10 @@ from flask_migrate import Migrate
 from models import Article, Author, Comments, User
 from db import connection_string, db
 from sqlalchemy.orm import joinedload
+from werkzeug.security import check_password_hash,generate_password_hash
+# from flask_cors import CORS
+
+
 
 
 app = Flask(__name__)
@@ -11,8 +15,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = connection_string
 api = Api(app)
 db.init_app(app)
 
-
-
+migrate=Migrate(app,db)
+# CORS(app)
 
 class HomePage(Resource):
     def get(self):
@@ -203,6 +207,62 @@ class UserResource(Resource):
             return jsonify({'message': 'User updated successfully'})
         return jsonify({'message': 'User not found'}), 404
     
+class LoginResource(Resource):
+    def post(self):
+        data = request.json  # Assuming the request contains JSON data
+        email = data.get('email')
+        password = data.get('password')
+
+        # Check if email and password are provided
+        if not email or not password:
+            return {'message': 'Email and password are required'}, 400
+
+        # Query the database to find the user by email
+        user = User.query.filter_by(email=email).first()
+
+        # If user not found, return error message
+        if not user:
+            return {'message': 'User not found'}, 404
+
+        # If the user has a password hash stored
+        if user.password_hash:
+            # Check if the provided password matches the stored password hash
+            if not user.check_password(password):
+                return {'message': 'Invalid password'}, 401
+        else:
+            # If password is not hashed, directly compare with stored password
+            if user.password != password:
+                return {'message': 'Invalid password'}, 401
+
+        # If email and password are correct, return success message
+        return {'message': 'Login successful'}, 200
+
+class RegisterResource(Resource):
+    def post(self):
+        # Parse JSON data from request
+        data = request.json
+        name = data.get('name')
+        contact = data.get('contact')
+        email = data.get('email')
+        password = data.get('password')
+
+        # Check if the email is already registered
+        existing_user = User.query.filter_by(email=email).first()
+        if existing_user:
+            return {'message': 'Email is already registered'}, 400
+
+        # Create a new user object
+        new_user = User(name=name, contact=contact, email=email)
+        new_user.set_password(password)  # Hash the password
+
+        # Add the new user to the database
+        db.session.add(new_user)
+        db.session.commit()
+
+        return {'message': 'User registered successfully'}, 201
+
+
+    
     
 
 api.add_resource(HomePage, '/')
@@ -214,6 +274,10 @@ api.add_resource(UsersResource, '/users')
 api.add_resource(UserResource, '/users/<int:user_id>')
 api.add_resource(AuthorsResource, '/authors')
 api.add_resource(AuthorResource, '/authors/<string:username>')
+api.add_resource(LoginResource, '/login')
+api.add_resource(RegisterResource, '/register')
+
+
 
 
 

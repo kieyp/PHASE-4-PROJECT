@@ -1,8 +1,8 @@
-"""created models
+""" updates
 
-Revision ID: c25e585432a1
+Revision ID: f8fc91e27b1a
 Revises: 
-Create Date: 2024-03-26 21:25:07.893990
+Create Date: 2024-04-06 14:27:08.559521
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'c25e585432a1'
+revision = 'f8fc91e27b1a'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -38,7 +38,9 @@ def upgrade():
     sa.Column('name', sa.String(), nullable=True),
     sa.Column('contact', sa.String(), nullable=True),
     sa.Column('email', sa.String(length=120), nullable=True),
-    sa.PrimaryKeyConstraint('id')
+    sa.Column('password_hash', sa.String(), nullable=True),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('email')
     )
     op.create_table('author_article_association',
     sa.Column('author_id', sa.Integer(), nullable=True),
