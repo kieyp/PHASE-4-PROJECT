@@ -4,9 +4,12 @@ from flask_migrate import Migrate
 from models import Article, Author, Comments, User
 from db import connection_string, db
 from sqlalchemy.orm import joinedload
+<<<<<<< HEAD
 from werkzeug.security import check_password_hash,generate_password_hash
 # from flask_cors import CORS
 
+=======
+>>>>>>> be3f550 (Update on Articles Resource)
 
 
 app = Flask(__name__)
