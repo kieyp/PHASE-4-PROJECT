@@ -7,6 +7,7 @@ import Signin from "./Signin";
 import Register from "./Register";
 import Profile from "./Profile";
 import Authors from "./Authors";
+import Comments from "./Comments";
 
 
 
@@ -39,12 +40,7 @@ function App() {
         <Route exact path="/authors">
           <Authors />
         </Route>
-        
-
-            
-
-
-
+  
 
           <Route exact path="/">
             <Home />

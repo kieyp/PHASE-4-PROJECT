@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 
-function Signin() {
+function Signin({ setLoggedInUserId }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -10,12 +10,10 @@ function Signin() {
   const history = useHistory();
 
   const handleEmailChange = (e) => {
-    console.log('Email typed:', e.target.value);
     setEmail(e.target.value);
   };
 
   const handlePasswordChange = (e) => {
-    console.log('Password typed:', e.target.value);
     setPassword(e.target.value);
   };
 
@@ -24,7 +22,6 @@ function Signin() {
     setIsLoading(true);
 
     try {
-      // Validation: Check if email and password are provided
       if (!email || !password) {
         setErrorMessage('Email and password are required');
         setIsLoading(false);
@@ -34,18 +31,15 @@ function Signin() {
       const response = await axios.post('/login', { email, password });
 
       if (response.status === 200) {
-        // Login successful
         setErrorMessage('');
         setIsLoading(false);
-        // Redirect user to another page upon successful login
-        history.push('/dashboard');
+        setLoggedInUserId(response.data.userId); // Assuming the server returns the logged-in user's ID
+        history.push('/articles'); // Redirect to the ArticleList component
       } else {
-        // Handle unexpected response status
         setErrorMessage('An unexpected error occurred');
         setIsLoading(false);
       }
     } catch (error) {
-      // Handle error response
       if (error.response) {
         setErrorMessage(error.response.data.message || 'Login failed. Please try again.');
       } else {
