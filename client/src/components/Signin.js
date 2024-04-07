@@ -1,19 +1,36 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; 
-function Signin() {
+import { Link, useHistory } from 'react-router-dom';
+import axios from 'axios';
+
+const Signin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const history = useHistory(); // useHistory hook to access history object
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // logic to handle form submission
-    console.log('Form submitted:', { email, password });
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post('/login', { email, password });
+      const { access_token } = response.data; // Extract access token from response
+
+      // Store access token in local storage
+      localStorage.setItem('accessToken', access_token);
+
+      // Redirect to the dashboard route after successful login
+      history.push('/dashboard');
+    } catch (error) {
+      console.error('Error:', error.response.data); // Log the error response for debugging
+      setError('Invalid email or password');
+    }
   };
 
   return (
     <div>
-      <h2>Signin</h2>
-      <form onSubmit={handleSubmit}>
+      <h2>Sign In</h2>
+      {error && <p>{error}</p>}
+      <form onSubmit={handleLogin}>
         <div>
           <label htmlFor="email">Email:</label>
           <input
@@ -36,7 +53,7 @@ function Signin() {
         </div>
         <button type="submit">Sign In</button>
       </form>
-      <p>Not registered? <Link to="/register">Register Here</Link></p>
+      <p>Don't have an account? <Link to="/register">Register</Link></p>
     </div>
   );
 }

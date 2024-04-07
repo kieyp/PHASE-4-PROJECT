@@ -4,14 +4,22 @@ from flask_migrate import Migrate
 from models import Article, Author, Comments, User
 from db import connection_string, db
 from sqlalchemy.orm import joinedload
+from flask_jwt_extended import JWTManager,jwt_required,create_access_token,get_jwt_identity
+import secrets
+secret_key = secrets.token_hex(32)
 
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = connection_string
+app.config['SECRET_KEY'] = secret_key
+
 api = Api(app)
 db.init_app(app)
 
 
+
+migrate=Migrate(app,db)
+jwt = JWTManager(app)
 
 
 class HomePage(Resource):
@@ -204,6 +212,74 @@ class UserResource(Resource):
         return jsonify({'message': 'User not found'}), 404
     
     
+    
+class LoginResource(Resource):
+    
+    def post(self):
+        data = request.json  # Assuming the request contains JSON data
+        email = data.get('email')
+        password = data.get('password')
+
+        # Check if email and password are provided
+        if not email or not password:
+            return {'message': 'Email and password are required'}, 400
+
+        # Query the database to find the user by email
+        user = User.query.filter_by(email=email).first()
+
+        # If user not found, return error message
+        if not user:
+            return {'message': 'User not found'}, 404
+
+        # If the user has a password hash stored
+        if user.password_hash:
+            # Check if the provided password matches the stored password hash
+            if not user.check_password(password):
+                return {'message': 'Invalid password'}, 401
+        else:
+            # If password is not hashed, directly compare with stored password
+            if user.password != password:
+                return {'message': 'Invalid password'}, 401
+
+        # If email and password are correct, generate access token
+        access_token = create_access_token(identity=user.id, additional_claims={"name": user.name})
+
+        # Return success message along with the access token
+        return {'message': 'Login successful', 'access_token': access_token}, 200
+
+
+    @jwt_required()
+    def get(self):
+        # This endpoint can only be accessed by authenticated users
+        current_user_id = get_jwt_identity()
+
+        return {'message': f'Welcome, User {current_user_id}'}, 200
+    
+class RegisterResource(Resource):
+    def post(self):
+        # Parse JSON data from request
+        data = request.json
+        name = data.get('name')
+        contact = data.get('contact')
+        email = data.get('email')
+        password = data.get('password')
+
+        # Check if the email is already registered
+        existing_user = User.query.filter_by(email=email).first()
+        if existing_user:
+            return {'message': 'Email is already registered'}, 400
+
+        # Create a new user object
+        new_user = User(name=name, contact=contact, email=email)
+        new_user.set_password(password)  # Hash the password
+
+        # Add the new user to the database
+        db.session.add(new_user)
+        db.session.commit()
+
+        return {'message': 'User registered successfully'}, 201
+
+    
 
 api.add_resource(HomePage, '/')
 api.add_resource(ArticlesResource, '/articles')
@@ -214,7 +290,8 @@ api.add_resource(UsersResource, '/users')
 api.add_resource(UserResource, '/users/<int:user_id>')
 api.add_resource(AuthorsResource, '/authors')
 api.add_resource(AuthorResource, '/authors/<string:username>')
-
+api.add_resource(LoginResource, '/login')
+api.add_resource(RegisterResource, '/register')
 
 
 
