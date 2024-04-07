@@ -258,33 +258,6 @@ class UserDataResource(Resource):
             return jsonify({'name': user.name, 'contact': user.contact, 'email': user.email})
         return jsonify({'message': 'User not found'}), 404
 
-# class ArticlesDataResource(Resource):
-#     def get(self):
-#         articles = Article.query.all()
-#         articles_data = []
-
-#         for article in articles:
-#             article_data = {
-#                 'id': article.id,
-#                 'title': article.title,
-#                 'body': article.body,
-#                 'comments': []
-#             }
-#             for comment in article.comments:
-#                 comment_data = {
-#                     'id': comment.id,
-#                     'text': comment.text,
-#                     'user': {  # Include user information for the commenter
-#                         'id': comment.user.id,
-#                         'name': comment.user.name,
-#                         'contact': comment.user.contact,
-#                         'email': comment.user.email
-#                     }
-#                 }
-#                 article_data['comments'].append(comment_data)
-#             articles_data.append(article_data)
-
-#         return jsonify(articles_data)
 
 class ArticlesDataResource(Resource):
     def get(self):
