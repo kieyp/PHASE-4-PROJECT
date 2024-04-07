@@ -1,38 +1,29 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import axios from 'axios';
 
-const Comments = ({ articleId, loggedInUserId }) => {
+function Comments({ articleId }) {
   const [content, setContent] = useState('');
-  const history = useHistory();
+  const [submitting, setSubmitting] = useState(false); 
+  const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!loggedInUserId) {
-      alert('Please sign in to comment');
-      history.push('/signin');
-      return;
-    }
+    setSubmitting(true); 
 
     try {
-      const response = await fetch(`/articles/${articleId}/comments`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ content, userId: loggedInUserId }),
-      });
+      const response = await axios.post(`/articles/${articleId}/comments`, { content });
 
-      if (response.ok) {
+      if (response.status === 201) {
         console.log('Comment submitted successfully');
-        setContent(''); // Clear the comment textarea after successful submission
-        // Optionally, redirect to another page after comment submission
-        history.push('/articles');
+        setContent('');
       } else {
-        console.error('Failed to submit comment');
+        setError('Failed to submit comment');
       }
     } catch (error) {
       console.error('Error submitting comment:', error);
+      setError(error.message || 'Failed to submit comment. Please try again later.');
+    } finally {
+      setSubmitting(false); 
     }
   };
 
@@ -40,11 +31,18 @@ const Comments = ({ articleId, loggedInUserId }) => {
     <div>
       <h3>Add Comment</h3>
       <form onSubmit={handleSubmit}>
-        <textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder="Write your comment here"></textarea>
-        <button type="submit">Submit Comment</button>
+        <textarea
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          placeholder="Write your comment here"
+          disabled={submitting}
+          required
+        ></textarea>
+        <button type="submit" disabled={submitting}>Submit Comment</button>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
       </form>
     </div>
   );
-};
+}
 
 export default Comments;
