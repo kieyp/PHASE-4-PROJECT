@@ -1,29 +1,42 @@
-import React, { useState } from 'react';
-import axios from 'axios';
 
-function Comments({ articleId }) {
-  const [content, setContent] = useState('');
-  const [submitting, setSubmitting] = useState(false); 
+import React, { useState } from 'react';
+
+const Comments = ({ articleId }) => {
+  const [text, setText] = useState(''); // Rename 'content' state to 'text'
+  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitting(true); 
+    setSubmitting(true);
+    setError(null);
 
     try {
-      const response = await axios.post(`/articles/${articleId}/comments`, { content });
-
-      if (response.status === 201) {
-        console.log('Comment submitted successfully');
-        setContent('');
-      } else {
-        setError('Failed to submit comment');
+      const authToken = localStorage.getItem('authToken');
+      if (!authToken) {
+        throw new Error('User not authenticated');
       }
+
+      const response = await fetch(`/articles/${articleId}/comments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({ text }), // Send 'text' key in the request payload
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit comment');
+      }
+
+      console.log('Comment submitted successfully');
+      setText('');
     } catch (error) {
       console.error('Error submitting comment:', error);
-      setError(error.message || 'Failed to submit comment. Please try again later.');
+      setError(error.message || 'Failed to submit comment');
     } finally {
-      setSubmitting(false); 
+      setSubmitting(false);
     }
   };
 
@@ -32,17 +45,18 @@ function Comments({ articleId }) {
       <h3>Add Comment</h3>
       <form onSubmit={handleSubmit}>
         <textarea
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
           placeholder="Write your comment here"
           disabled={submitting}
-          required
         ></textarea>
-        <button type="submit" disabled={submitting}>Submit Comment</button>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <button type="submit" disabled={submitting}>
+          {submitting ? 'Submitting...' : 'Submit Comment'}
+        </button>
+        {error && <p>{error}</p>}
       </form>
     </div>
   );
-}
+};
 
 export default Comments;

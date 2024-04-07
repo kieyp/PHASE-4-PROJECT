@@ -14,8 +14,9 @@ function Register() {
     event.preventDefault();
 
     try {
+      console.log('Submitting registration:', { name, contact, email, password });
       const response = await axios.post('/register', { name, contact, email, password });
-      console.log(response.data); // Handle successful registration response
+      console.log('Registration response:', response.data); // Handle successful registration response
       setMessage('User registered successfully!');
     } catch (error) {
       console.error('Error:', error.response.data); // Handle error response
@@ -67,8 +68,8 @@ function Register() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <button  className={`show-password-btn ${showPassword ? 'active' : ''}`}
-           type="button" onClick={() => setShowPassword(!showPassword)}>
+          <button className={`show-password-btn ${showPassword ? 'active' : ''}`}
+            type="button" onClick={() => setShowPassword(!showPassword)}>
             {showPassword ? 'Hide' : 'Show'} Password
           </button>
         </div>

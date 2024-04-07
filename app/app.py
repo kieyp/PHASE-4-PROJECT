@@ -9,7 +9,6 @@ from werkzeug.security import check_password_hash,generate_password_hash
 
 
 
-
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = connection_string
 api = Api(app)
@@ -261,6 +260,33 @@ class RegisterResource(Resource):
 
         return {'message': 'User registered successfully'}, 201
 
+class ArticlesCommentsResource(Resource):
+    def post(self, article_id):
+        data = request.json
+        text = data.get('text')
+        if not text:
+            return jsonify({'message': 'Text is required for creating a comment'}), 400
+
+        # Extract user information from headers
+        user_id = request.headers.get('user_id')  # Assuming the header contains the user ID
+
+        # Check if user_id is provided in headers
+        if not user_id:
+            return jsonify({'message': 'User ID is required in headers'}), 400
+
+        # Assuming you want to associate the comment with the specified article_id
+        article = Article.query.get(article_id)
+        if not article:
+            return jsonify({'message': 'Article not found'}), 404
+
+        # Associate user_id with the comment
+        comment = Comments(text=text, article_id=article_id, user_id=user_id)
+
+        db.session.add(comment)
+        db.session.commit()
+
+        # Return a JSON response indicating success
+        return jsonify({'message': 'Comment created successfully'})
 
     
     
@@ -276,8 +302,7 @@ api.add_resource(AuthorsResource, '/authors')
 api.add_resource(AuthorResource, '/authors/<string:username>')
 api.add_resource(LoginResource, '/login')
 api.add_resource(RegisterResource, '/register')
-
-
+api.add_resource(ArticlesCommentsResource, '/articles/<int:article_id>/comments')
 
 
 

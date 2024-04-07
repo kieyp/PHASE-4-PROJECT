@@ -1,19 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
-import Header from './Header';
-import Home from './Home';
-import Signin from './Signin';
-import Register from './Register';
-import ArticleList from './ArticleList';
-import BlogArticle from './BlogArticle';
-import Profile from './Profile';
-import Authors from './Authors';
-import Dashboard from './Dashboard';
-import Comments from './Comments';
+import React from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Header from "./Header";
+import Home from "./Home";
+import Signin from "./Signin";
+import Register from "./Register";
+import ArticleList from "./ArticleList";
+import BlogArticle from "./BlogArticle";
+import Profile from "./Profile";
+import Authors from "./Authors";
+import Comments from "./Comments";
+import Dashboard from "./Dashboard"; // Import the Dashboard component
 
 function App() {
-  const [loggedInUserId, setLoggedInUserId] = useState(null);
-
   return (
     <Router>
       <div>
@@ -24,30 +22,29 @@ function App() {
               <Home />
             </Route>
             <Route path="/signin">
-              {loggedInUserId ? (
-                <Redirect to="/dashboard" />
-              ) : (
-                <Signin setLoggedInUserId={setLoggedInUserId} />
-              )}
+              <Signin />
             </Route>
             <Route path="/register">
               <Register />
             </Route>
-            <Route path="/dashboard">
-              {loggedInUserId ? <Dashboard /> : <Redirect to="/signin" />}
-            </Route>
             <Route path="/articles">
-              {loggedInUserId ? <ArticleList /> : <Redirect to="/signin" />}
+              <ArticleList />
             </Route>
             <Route path="/article/:id">
-              <BlogArticle loggedInUserId={loggedInUserId} />
-              {loggedInUserId && <Comments loggedInUserId={loggedInUserId} />}
+              <BlogArticle />
+              <Comments />
+            </Route>
+            <Route path="/blogarticle">
+              <BlogArticle />
             </Route>
             <Route path="/profile">
               <Profile />
             </Route>
             <Route path="/authors">
               <Authors />
+            </Route>
+            <Route path="/dashboard"> {/* Route for the dashboard */}
+              <Dashboard />
             </Route>
           </Switch>
         </main>
