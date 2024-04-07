@@ -34,7 +34,7 @@ function App() {
             </Route>
             <Route path="/article/:id">
               <BlogArticle />
-              <Comments user={user} /> {/* Pass user as a prop to Comments */}
+              {user && <Comments user={user} />} {/* Render Comments only if user is signed in */}
             </Route>
             <Route path="/blogarticle">
               <BlogArticle />

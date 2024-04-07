@@ -1,30 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useUser } from './UserProvider'; // Import the useUser hook
 
 const Comments = ({ articleId }) => {
+  const { userData } = useUser(); // Use the useUser hook to get user data
   const [text, setText] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
-  const [userName, setUserName] = useState('');
 
-  useEffect(() => {
-    // Fetch user data and set the user's name
-    const fetchUserData = async () => {
-      try {
-        const authToken = localStorage.getItem('authToken');
-        const response = await fetch('/login', {
-          headers: {
-            'Authorization': `Bearer ${authToken}`,
-          },
-        });
-        const data = await response.json();
-        setUserName(data.name);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    };
-
-    fetchUserData();
-  }, []);
+  const fullName = userData ? userData.name : ''; // Get the user's full name from userData
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,15 +16,16 @@ const Comments = ({ articleId }) => {
 
     try {
       const authToken = localStorage.getItem('authToken');
+      console.log('authToken:', authToken); // Log authToken to check if it's undefined
       if (!authToken) {
-        throw new Error('User not authenticated');
+        throw new Error('No auth token found');
       }
 
       const response = await fetch(`/articles/${articleId}/comments`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authToken}`,
+          'Authorization': `Bearer ${authToken}`, // Include the auth token in the Authorization header
         },
         body: JSON.stringify({ text }),
       });
@@ -63,7 +47,7 @@ const Comments = ({ articleId }) => {
   return (
     <div>
       <h3>Add Comment</h3>
-      <p>Logged in as: {userName}</p>
+      <p>Logged in as: {fullName}</p>
       <form onSubmit={handleSubmit}>
         <textarea
           value={text}
