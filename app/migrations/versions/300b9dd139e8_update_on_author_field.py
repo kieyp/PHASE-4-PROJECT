@@ -1,3 +1,4 @@
+<<<<<<< HEAD:app/migrations/versions/38e55c36d35b_added_password_column.py
 <<<<<<<< HEAD:app/migrations/versions/f8fc91e27b1a_updates.py
 """ updates
 
@@ -6,11 +7,18 @@ Revises:
 Create Date: 2024-04-06 14:27:08.559521
 ========
 """added password column
+=======
+"""update on author field
+>>>>>>> 1605845 (updates):app/migrations/versions/300b9dd139e8_update_on_author_field.py
 
-Revision ID: 38e55c36d35b
+Revision ID: 300b9dd139e8
 Revises: 
+<<<<<<< HEAD:app/migrations/versions/38e55c36d35b_added_password_column.py
 Create Date: 2024-04-07 14:01:49.235127
 >>>>>>>> e7623f4 (Modifications on all the code):app/migrations/versions/38e55c36d35b_added_password_column.py
+=======
+Create Date: 2024-04-07 19:22:27.866203
+>>>>>>> 1605845 (updates):app/migrations/versions/300b9dd139e8_update_on_author_field.py
 
 """
 from alembic import op
@@ -18,11 +26,15 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
+<<<<<<< HEAD:app/migrations/versions/38e55c36d35b_added_password_column.py
 <<<<<<<< HEAD:app/migrations/versions/f8fc91e27b1a_updates.py
 revision = 'f8fc91e27b1a'
 ========
 revision = '38e55c36d35b'
 >>>>>>>> e7623f4 (Modifications on all the code):app/migrations/versions/38e55c36d35b_added_password_column.py
+=======
+revision = '300b9dd139e8'
+>>>>>>> 1605845 (updates):app/migrations/versions/300b9dd139e8_update_on_author_field.py
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -42,7 +54,12 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('fullname', sa.String(), nullable=True),
     sa.Column('username', sa.String(), nullable=True),
+    sa.Column('email', sa.String(), nullable=True),
+    sa.Column('password_hash', sa.String(), nullable=True),
+    sa.Column('bio', sa.Text(), nullable=True),
+    sa.Column('location', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('email'),
     sa.UniqueConstraint('username')
     )
     op.create_table('users',
