@@ -7,6 +7,8 @@ body {
 
 header {
   background-color: #cc4224;
+  display: flex; 
+  justify-content: center; 
 }
 
 main {
@@ -35,23 +37,24 @@ h2 {
 ul {
   padding: 0;
   list-style: none;
+  display: flex; 
 }
 
 li {
   padding: 12px;
 }
 
-li:nth-of-type(2n) {
-  background-color: #80b5e1;
+a {
+  text-decoration: none;
 }
+
 
 li a {
   font-weight: bold;
   color: #3e3e3e;
-  margin-right: 16px;
 }
 
-li:nth-of-type(2n) a {
+li a {
   color: #fff;
 }
 
@@ -75,3 +78,23 @@ button[type="submit"] {
   margin: 24px 0 0 0;
   cursor: pointer;
 }
+
+.authors-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.authors-table th, .authors-table td {
+  border: 1px solid #dddddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.authors-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+
+
+
