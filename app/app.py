@@ -258,6 +258,34 @@ class UserDataResource(Resource):
             return jsonify({'name': user.name, 'contact': user.contact, 'email': user.email})
         return jsonify({'message': 'User not found'}), 404
 
+# class ArticlesDataResource(Resource):
+#     def get(self):
+#         articles = Article.query.all()
+#         articles_data = []
+
+#         for article in articles:
+#             article_data = {
+#                 'id': article.id,
+#                 'title': article.title,
+#                 'body': article.body,
+#                 'comments': []
+#             }
+#             for comment in article.comments:
+#                 comment_data = {
+#                     'id': comment.id,
+#                     'text': comment.text,
+#                     'user': {  # Include user information for the commenter
+#                         'id': comment.user.id,
+#                         'name': comment.user.name,
+#                         'contact': comment.user.contact,
+#                         'email': comment.user.email
+#                     }
+#                 }
+#                 article_data['comments'].append(comment_data)
+#             articles_data.append(article_data)
+
+#         return jsonify(articles_data)
+
 class ArticlesDataResource(Resource):
     def get(self):
         articles = Article.query.all()
@@ -268,6 +296,7 @@ class ArticlesDataResource(Resource):
                 'id': article.id,
                 'title': article.title,
                 'body': article.body,
+                'authors': [author.fullname for author in article.authors],  # Access the fullname of all authors
                 'comments': []
             }
             for comment in article.comments:
@@ -288,7 +317,6 @@ class ArticlesDataResource(Resource):
 
 
 
-
 api.add_resource(HomePage, '/')
 api.add_resource(ArticlesResource, '/articles')
 api.add_resource(ArticleResource, '/articles/<int:article_id>')
@@ -301,6 +329,7 @@ api.add_resource(RegisterResource, '/register')
 api.add_resource(ArticlesCommentsResource, '/articles/<int:article_id>/comments')
 api.add_resource(UserDataResource, '/api/user')
 api.add_resource(ArticlesDataResource, '/articleslist')
+
 
 
 if __name__ == '__main__':

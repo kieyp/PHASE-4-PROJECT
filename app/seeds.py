@@ -5,7 +5,6 @@ from werkzeug.security import generate_password_hash
 import random
 from app import app
 
-
 fake = Faker()
 
 def clear_database():
@@ -19,7 +18,10 @@ def clear_database():
 def create_author():
     fullname = fake.name()
     username = fake.user_name()
-    author = Author(fullname=fullname, username=username)
+    password_hash = generate_password_hash(fake.password())  # Generate hashed password
+    bio = fake.paragraph()
+    location = fake.city()
+    author = Author(fullname=fullname, username=username, password_hash=password_hash, bio=bio, location=location)
     db.session.add(author)
     db.session.commit()
     return author
@@ -33,8 +35,6 @@ def create_user():
     db.session.add(user)
     db.session.commit()
     return user
-
-
 
 def generate_technology_article_title():
     # Generate a random technology-related article title
@@ -53,17 +53,26 @@ def generate_article_body():
 def create_technology_article(authors):
     title = generate_technology_article_title()
     body = generate_article_body()
-    author = random.choice(authors)
-    article = Article(title=title, body=body, authors=[author])
+    
+    # Create the article
+    article = Article(title=title, body=body)
+    
+    # Associate the article with one or more authors
+    num_authors = random.randint(1, 3)
+    selected_authors = random.sample(authors, num_authors)
+    article.authors.extend(selected_authors)
+    
+    # Add the article to the session and commit
     db.session.add(article)
     db.session.commit()
+    
     return article
 
 def create_comment(articles, users):
     text = fake.paragraph()
     article = random.choice(articles)
     user = random.choice(users)
-    comment = Comments(text=text, article=article, user=user)
+    comment = Comments(text=text, article_id=article.id, user_id=user.id)
     db.session.add(comment)
     db.session.commit()
 
@@ -72,13 +81,13 @@ if __name__ == '__main__':
         clear_database()
 
         # Create authors
-        authors = [create_author() for _ in range(5)]
+        authors = [create_author() for _ in range(20)]
 
         # Create users
         users = [create_user() for _ in range(20)]
 
-        # Create articles
-        articles = [create_technology_article(authors) for _ in range(10)]
+        # Create technology articles
+        articles = [create_technology_article(authors) for _ in range(20)]
 
         # Create comments
         for _ in range(50):
