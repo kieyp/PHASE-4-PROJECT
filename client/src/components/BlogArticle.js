@@ -34,6 +34,7 @@ const BlogArticle = () => {
           {articles.map((article) => (
             <div key={article.id} className="article-card">
               <h2 className="article-title">{article.title}</h2>
+              <p className="article-author">Author: {article.authors.join(', ')}</p>
               <p className="article-body">{article.body}</p>
               {article.comments && article.comments.length > 0 && (
                 <>
