@@ -1,5 +1,9 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import React from "react";
+=======
+import React, { useState } from "react";
+>>>>>>> e7623f4 (Modifications on all the code)
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Header from "./Header";
 import Home from "./Home";
@@ -9,6 +13,7 @@ import ArticleList from "./ArticleList";
 import BlogArticle from "./BlogArticle";
 import Profile from "./Profile";
 import Authors from "./Authors";
+<<<<<<< HEAD
 import Comments from "./Comments";
 import Dashboard from "./Dashboard"; // Import the Dashboard component
 =======
@@ -62,13 +67,29 @@ const App = () => {
 <<<<<<< HEAD
       <div>
         <Header />
+=======
+import Comments from "./CommentForm";
+import Dashboard from "./Dashboard";
+
+function App() {
+  const [user, setUser] = useState(null); // Initialize user state to null
+
+  return (
+    <Router>
+      <div>
+        <Header user={user} /> {/* Pass user as a prop to Header */}
+>>>>>>> e7623f4 (Modifications on all the code)
         <main>
           <Switch>
             <Route exact path="/">
               <Home />
             </Route>
             <Route path="/signin">
+<<<<<<< HEAD
               <Signin />
+=======
+              <Signin setUser={setUser} /> {/* Pass setUser as a prop to Signin */}
+>>>>>>> e7623f4 (Modifications on all the code)
             </Route>
             <Route path="/register">
               <Register />
@@ -78,7 +99,11 @@ const App = () => {
             </Route>
             <Route path="/article/:id">
               <BlogArticle />
+<<<<<<< HEAD
               <Comments />
+=======
+              <Comments user={user} /> {/* Pass user as a prop to Comments */}
+>>>>>>> e7623f4 (Modifications on all the code)
             </Route>
             <Route path="/blogarticle">
               <BlogArticle />
@@ -89,11 +114,16 @@ const App = () => {
             <Route path="/authors">
               <Authors />
             </Route>
+<<<<<<< HEAD
             <Route path="/dashboard"> {/* Route for the dashboard */}
+=======
+            <Route path="/dashboard">
+>>>>>>> e7623f4 (Modifications on all the code)
               <Dashboard />
             </Route>
           </Switch>
         </main>
+<<<<<<< HEAD
 =======
       <div className="App">
         <Navbar isLoggedIn={isLoggedIn} user={user} handleLogout={handleLogout} />
@@ -106,6 +136,8 @@ const App = () => {
           <Route component={NotFound} />
         </Switch>
 >>>>>>> d7938e0 (appcomp)
+=======
+>>>>>>> e7623f4 (Modifications on all the code)
       </div>
     </Router>
   );

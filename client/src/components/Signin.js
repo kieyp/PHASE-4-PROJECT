@@ -13,8 +13,18 @@ const Signin = () => {
 
     try {
       const response = await axios.post('/login', { email, password });
+<<<<<<< HEAD
       console.log(response.data); // Log the response for debugging
       history.push('/dashboard'); // Redirect to the dashboard route after successful login
+=======
+      const { access_token } = response.data; // Extract access token from response
+
+      // Store access token in local storage
+      localStorage.setItem('accessToken', access_token);
+
+      // Redirect to the dashboard route after successful login
+      history.push('/dashboard');
+>>>>>>> e7623f4 (Modifications on all the code)
     } catch (error) {
       console.error('Error:', error.response.data); // Log the error response for debugging
       setError('Invalid email or password');

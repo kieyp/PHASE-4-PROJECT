@@ -14,8 +14,12 @@ flask-migrate = "*"
 flask-sqlalchemy = "*"
 flask-jwt-extended = "*"
 flask-restful = "*"
+<<<<<<< HEAD
 faker = "*"
 flask-login = "*"
+=======
+flask-jwt-extended = "*"
+>>>>>>> e7623f4 (Modifications on all the code)
 
 [dev-packages]
 

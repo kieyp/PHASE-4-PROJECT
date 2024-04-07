@@ -32,4 +32,8 @@ class User(db.Model):
             return check_password_hash(self.password_hash, password)
         else:
             # Password is not hashed, return False
+<<<<<<< HEAD
             return False
+=======
+            return False
+>>>>>>> e7623f4 (Modifications on all the code)

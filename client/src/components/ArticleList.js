@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
+<<<<<<< HEAD
 import Comments from './Comments';
+=======
+import Comments from './CommentForm';
+>>>>>>> e7623f4 (Modifications on all the code)
 
 function ArticleList() {
   const [articles, setArticles] = useState([]);

@@ -40,4 +40,8 @@ function Dashboard() {
   );
 }
 
+<<<<<<< HEAD
 export default Dashboard;
+=======
+export default Dashboard;
+>>>>>>> e7623f4 (Modifications on all the code)

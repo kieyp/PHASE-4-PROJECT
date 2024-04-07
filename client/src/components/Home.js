@@ -1,23 +1,28 @@
 import React, { useState, useEffect } from 'react';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { Link } from 'react-router-dom';
 =======
 >>>>>>> be3f550 (Update on Articles Resource)
+=======
+import { Link } from 'react-router-dom';
+>>>>>>> e7623f4 (Modifications on all the code)
 
 function Home() {
   const [articles, setArticles] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e7623f4 (Modifications on all the code)
     // Fetch latest articles from the backend
     fetch('/articles?per_page=2')
       .then(response => response.json())
       .then(data => setArticles(data.articles))
       .catch(error => console.error('Error fetching articles:', error));
   }, []);
+<<<<<<< HEAD
 
   return (
     <div style={styles.container}>
@@ -84,48 +89,61 @@ function Home() {
       setCurrentPage(currentPage - 1);
     }
   };
+=======
+>>>>>>> e7623f4 (Modifications on all the code)
 
   return (
-    <div>
-      <h1>Article List</h1>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <div>
-          {articles.length > 0 ? (
-            <div>
-              {articles.map((article) => (
-                <div key={article.id} style={{ marginBottom: '20px' }}>
-                  <h2>{article.title}</h2>
-                  <p>{article.body}</p>
-                  <h3>Comments:</h3>
-                  {article.comments.length > 0 ? (
-                    <ul>
-                      {article.comments.map((comment) => (
-                        <li key={comment.id}>
-                          <strong>{comment.user ? comment.user.name : 'Unknown User'}</strong>: {comment.text}
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p>No comments found</p>
-                  )}
-                </div>
-              ))}
-              <button onClick={handlePrevPage} disabled={currentPage === 1}>Previous Page</button>
-              <button onClick={handleNextPage} disabled={currentPage === totalPages}>Next Page</button>
-            </div>
-          ) : (
-            <p>No articles found</p>
-          )}
+    <div style={styles.container}>
+      {/* Header */}
+      <header style={styles.header}>
+        <h1 style={styles.heading}>Welcome to Tech 2Day</h1>
+      </header>
+      <p style={styles.subheading}>Discover the latest trends in AI and technology.</p>
+      {/* About AI and Technology */}
+      <section style={styles.section}>
+        <h2 style={styles.sectionHeading}>About AI and Technology</h2>
+        <p style={styles.sectionText}>
+          Technology and artificial intelligence (AI) have become inseparable components shaping our modern world. From smartphones that anticipate our needs to algorithms powering personalized recommendations, AI permeates various facets of our daily lives. Its applications extend beyond convenience, influencing industries like healthcare, finance, and transportation, revolutionizing processes and decision-making. The synergy between technology and AI continues to fuel innovation, enabling breakthroughs in areas such as autonomous vehicles, natural language processing, and advanced robotics. However, with these advancements come ethical considerations, including privacy concerns and the potential for job displacement. As we navigate this evolving landscape, harnessing the power of technology and AI responsibly holds the key to unlocking their transformative potential while ensuring a future that benefits all.
+        </p>
+      </section>
+
+      {/* Latest Articles */}
+      <section style={styles.section}>
+        <h2 style={styles.sectionHeading}>Latest Articles</h2>
+        {articles.map(article => (
+          <div key={article.id} style={styles.article}>
+            <h3 style={styles.articleTitle}>{article.title}</h3>
+            <p style={styles.articleBody}>{article.body.substring(0, 100)}...</p>
+          </div>
+        ))}
+      </section>
+
+      {/* Sign In */}
+      <section style={styles.section}>
+        <h2 style={styles.sectionHeading}>Sign In</h2>
+        <p style={styles.sectionText}>Please sign in to read more articles:</p>
+        <div style={styles.buttonContainer}>
+          <Link to="/signin" style={styles.button}>
+            Sign In
+          </Link>
+          <Link to="/register" style={styles.button}>
+            Register
+          </Link>
         </div>
+<<<<<<< HEAD
       )}
 >>>>>>> be3f550 (Update on Articles Resource)
+=======
+      </section>
+>>>>>>> e7623f4 (Modifications on all the code)
     </div>
   );
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e7623f4 (Modifications on all the code)
 const styles = {
   container: {
     maxWidth: '800px',
@@ -209,6 +227,10 @@ const styles = {
   },
 };
 
+<<<<<<< HEAD
 =======
 >>>>>>> be3f550 (Update on Articles Resource)
 export default Home;
+=======
+export default Home;
+>>>>>>> e7623f4 (Modifications on all the code)
