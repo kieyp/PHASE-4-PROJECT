@@ -6,6 +6,7 @@ function Register() {
   const [fullname, setFullname] = useState('');
   const [contact, setContact] = useState('');
   const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [bio, setBio] = useState('');
   const [location, setLocation] = useState('');
@@ -17,7 +18,7 @@ function Register() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!fullname || !contact || !email || !password) {
+    if (!fullname || !contact || !email || !password || (isAuthor && !username)) {
       setError('Please fill out all required fields');
       return;
     }
@@ -26,6 +27,7 @@ function Register() {
       fullname,
       contact,
       email,
+      username: isAuthor ? username : '', // Only include username if registering as an Author
       password,
       bio: isAuthor ? bio : '', // Only include bio if registering as an Author
       location: isAuthor ? location : '', // Only include location if registering as an Author
@@ -82,6 +84,18 @@ function Register() {
             required
           />
         </div>
+        {isAuthor && (
+          <div>
+            <label htmlFor="username">Username:</label>
+            <input
+              type="text"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </div>
+        )}
         <div>
           <label htmlFor="password">Password:</label>
           <input
