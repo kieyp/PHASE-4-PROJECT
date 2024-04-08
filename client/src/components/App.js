@@ -10,6 +10,7 @@ import Profile from "./Profile";
 import Authors from "./Authors";
 import Comments from "./CommentForm";
 import Dashboard from "./Dashboard";
+import CreateArticle from "./CreateArticle";
 
 function App() {
   const [user, setUser] = useState(null); // Initialize user state to null
@@ -47,6 +48,7 @@ function App() {
             </Route>
             <Route path="/dashboard">
               <Dashboard />
+            <Route path="/create-article" component={CreateArticle} />
             </Route>
           </Switch>
         </main>
