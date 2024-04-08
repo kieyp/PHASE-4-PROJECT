@@ -1,9 +1,13 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import React from "react";
 =======
 import React, { useState } from "react";
 >>>>>>> e7623f4 (Modifications on all the code)
+=======
+import React, { useState } from "react";
+>>>>>>> 61b34d6 (author articles)
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Header from "./Header";
 import Home from "./Home";
@@ -13,6 +17,7 @@ import ArticleList from "./ArticleList";
 import BlogArticle from "./BlogArticle";
 import Profile from "./Profile";
 import Authors from "./Authors";
+<<<<<<< HEAD
 <<<<<<< HEAD
 import Comments from "./Comments";
 import Dashboard from "./Dashboard"; // Import the Dashboard component
@@ -68,8 +73,11 @@ const App = () => {
       <div>
         <Header />
 =======
+=======
+>>>>>>> 61b34d6 (author articles)
 import Comments from "./CommentForm";
 import Dashboard from "./Dashboard";
+import CreateArticle from "./CreateArticle";
 
 function App() {
   const [user, setUser] = useState(null); // Initialize user state to null
@@ -124,9 +132,11 @@ function App() {
             <Route path="/dashboard">
 >>>>>>> e7623f4 (Modifications on all the code)
               <Dashboard />
+            <Route path="/create-article" component={CreateArticle} />
             </Route>
           </Switch>
         </main>
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
       <div className="App">
@@ -142,9 +152,11 @@ function App() {
 >>>>>>> d7938e0 (appcomp)
 =======
 >>>>>>> e7623f4 (Modifications on all the code)
+=======
+>>>>>>> 61b34d6 (author articles)
       </div>
     </Router>
   );
-};
+}
 
 export default App;
