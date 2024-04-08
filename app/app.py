@@ -154,7 +154,6 @@ class ArticleResource(Resource):
         db.session.commit()
         return jsonify({'message': 'Article deleted successfully'})
     
-    
     @jwt_required()
     def patch(self, article_id):
         current_user_id = get_jwt_identity()
@@ -164,8 +163,11 @@ class ArticleResource(Resource):
             return jsonify({'message': 'Article not found'}), 404
         if article.author_id != current_user_id:
             return jsonify({'message': 'You are not authorized to edit this article'}), 403
-        article.title = data.get('title', article.title)
-        article.body = data.get('body', article.body)
+        # Update the article fields with the data provided in the request
+        if 'title' in data:
+            article.title = data['title']
+        if 'body' in data:
+            article.body = data['body']
         db.session.commit()
         return jsonify({'message': 'Article updated successfully'})
 
@@ -370,7 +372,26 @@ class AuthorRegistrationResource(Resource):
         db.session.add(new_author)
         db.session.commit()
 
+
         return {'message': 'Author registered successfully'}, 201
+    
+    
+    
+class AuthorArticlesResource(Resource):
+    @jwt_required()
+    def get(self):
+        current_author_id = get_jwt_identity()
+        author_articles = Article.query.filter_by(author_id=current_author_id).all()
+        articles_data = []
+        for article in author_articles:
+            article_data = {
+                'id': article.id,
+                'title': article.title,
+                'body': article.body
+            }
+            articles_data.append(article_data)
+        return jsonify(articles_data)
+
     
     
     
@@ -406,8 +427,6 @@ api.add_resource(ArticlesCommentsResource, '/articles/<int:article_id>/comments'
 api.add_resource(UserDataResource, '/api/user')
 api.add_resource(ArticlesDataResource, '/articleslist')
 api.add_resource(AuthorLoginResource, '/author-login')
-
-
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
