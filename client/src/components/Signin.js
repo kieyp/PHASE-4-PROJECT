@@ -21,10 +21,20 @@ function Signin() {
     try {
       const response = await axios.post(isAuthor ? '/author-login' : '/login', formData);
       console.log('Login response:', response.data);
+      
+      // Store access token in localStorage
+      localStorage.setItem('token', response.data.access_token);
+
       // Display success message
       setSuccessMessage('Login successful!');
-      // Redirect to dashboard after successful login
-      history.push('/dashboard');
+
+      // Redirect to the article form if the user is an author
+      if (isAuthor) {
+        history.push('/article-form');
+      } else {
+        // Redirect to dashboard after successful login if not an author
+        history.push('/dashboard');
+      }
     } catch (error) {
       console.error('Login failed:', error.response.data);
       setError('Login failed. Please try again.');

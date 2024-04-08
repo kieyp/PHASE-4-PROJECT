@@ -11,6 +11,7 @@ import Authors from "./Authors";
 import Comments from "./CommentForm";
 import Dashboard from "./Dashboard";
 import CreateArticle from "./CreateArticle";
+import ArticleForm from "./ArticleForm"; // Import the ArticleForm component
 
 function App() {
   const [user, setUser] = useState(null); // Initialize user state to null
@@ -48,7 +49,13 @@ function App() {
             </Route>
             <Route path="/dashboard">
               <Dashboard />
-            <Route path="/create-article" component={CreateArticle} />
+            </Route>
+            <Route path="/create-article">
+              <CreateArticle />
+            </Route>
+            {/* Add a route for the article form */}
+            <Route path="/article-form">
+              <ArticleForm />
             </Route>
           </Switch>
         </main>

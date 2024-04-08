@@ -1,13 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link, useHistory } from 'react-router-dom';
 
 const ArticleForm = () => {
+  const [authorDetails, setAuthorDetails] = useState(null);
   const [formData, setFormData] = useState({
     title: '',
     body: ''
   });
-  const history = useHistory();
+
+  useEffect(() => {
+    const fetchAuthorDetails = async () => {
+      try {
+        const token = localStorage.getItem('token'); // Retrieve the access token from localStorage
+        const response = await axios.get('/author-details', {
+          headers: {
+            Authorization: `Bearer ${token}` // Include the access token in the request headers
+          }
+        });
+        setAuthorDetails(response.data);
+      } catch (error) {
+        console.error('Error fetching author details:', error);
+      }
+    };
+
+    fetchAuthorDetails();
+  }, []); // This effect runs only once when the component mounts
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -16,23 +33,29 @@ const ArticleForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/articles', formData);
+      const token = localStorage.getItem('token'); // Retrieve the access token from localStorage
+      const response = await axios.post('/articles', formData, {
+        headers: {
+          Authorization: `Bearer ${token}` // Include the access token in the request headers
+        }
+      });
       console.log(response.data);
-      // Optionally, you can redirect the user or show a success message
-
-      // If the user is not logged in, redirect to the sign-in page
-      if (!localStorage.getItem('accessToken')) {
-        history.push('/signin');
-      }
     } catch (error) {
       console.error('Article creation failed:', error.response.data);
-      // Handle article creation failure, show error message, etc.
     }
   };
 
   return (
     <div>
       <h2>Write Article</h2>
+      {authorDetails && (
+        <div>
+          <p>Username: {authorDetails.username}</p>
+          <p>Location: {authorDetails.location}</p>
+          <p>Full Name: {authorDetails.fullName}</p>
+          <p>Bio: {authorDetails.bio}</p>
+        </div>
+      )}
       <form onSubmit={handleSubmit}>
         <div>
           <label>Title:</label>
@@ -44,8 +67,6 @@ const ArticleForm = () => {
         </div>
         <button type="submit">Submit</button>
       </form>
-      <p>Already have an account? <Link to="/signin">Sign In</Link></p>
-      <p>Don't have an account? <Link to="/register">Register</Link></p>
     </div>
   );
 };

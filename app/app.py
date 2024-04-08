@@ -371,7 +371,27 @@ class AuthorRegistrationResource(Resource):
         db.session.commit()
 
         return {'message': 'Author registered successfully'}, 201
+    
+    
+    
+    
+class AuthorDetailsResource(Resource):
+    @jwt_required()
+    def get(self):
+        current_author_id = get_jwt_identity()
+        author = Author.query.get(current_author_id)
+        if author:
+            return jsonify({
+                'username': author.username,
+                'fullname': author.fullname,
+                'bio': author.bio,
+                'location': author.location
+            })
+        return jsonify({'message': 'Author not found'}), 404
 
+
+
+api.add_resource(AuthorDetailsResource, '/author-details')
 api.add_resource(AuthorRegistrationResource, '/author/register')
 api.add_resource(HomePage, '/')
 api.add_resource(ArticlesResource, '/articles')
