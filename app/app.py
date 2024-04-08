@@ -52,18 +52,46 @@ class HomePage(Resource):
     def get(self):
         return {'message': 'Welcome to TECH2DAY Back-End'}
 
-
 class AuthorsResource(Resource):
     def get(self):
         authors = Author.query.all()
+        # Ensure that 'authors' is a list of dictionaries with JSON-serializable data
         return jsonify([{'username': author.username, 'fullname': author.fullname} for author in authors])
 
     def post(self):
         data = request.json
-        author = Author(username=data['username'], fullname=data['fullname'])
+        if not data:
+            return jsonify({'error': 'No data provided in the request body'}), 400
+
+        # Extract all fields from the request data
+        username = data.get('username')
+        fullname = data.get('fullname')
+        bio = data.get('bio')
+        contact = data.get('contact')
+        location = data.get('location')
+
+        # Check if the username already exists
+        existing_author = Author.query.filter_by(username=username).first()
+        if existing_author:
+            return jsonify({'error': 'Username already exists'}), 400
+
+        # Create a new Author instance with all fields
+        author = Author(
+            username=username,
+            fullname=fullname,
+            bio=bio,
+            contact=contact,
+            location=location
+        )
         db.session.add(author)
-        db.session.commit()
-        return jsonify({'message': 'Author created successfully'})
+
+        try:
+            db.session.commit()
+            return jsonify({'message': 'Author created successfully'}), 201
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'error': f'Failed to create author: {str(e)}'}), 500
+
 
 
 class AuthorResource(Resource):
@@ -144,23 +172,30 @@ class ArticleResource(Resource):
 
     @jwt_required()
     def delete(self, article_id):
+        current_user_id = get_jwt_identity()
         article = Article.query.get(article_id)
-        if article:
-            db.session.delete(article)
-            db.session.commit()
-            return jsonify({'message': 'Article deleted successfully'})
-        return jsonify({'message': 'Article not found'}), 404
-
+        if not article:
+            return jsonify({'message': 'Article not found'}), 404
+        if article.author_id != current_user_id:
+            return jsonify({'message': 'You are not authorized to delete this article'}), 403
+        db.session.delete(article)
+        db.session.commit()
+        return jsonify({'message': 'Article deleted successfully'})
+    
+    
     @jwt_required()
     def patch(self, article_id):
+        current_user_id = get_jwt_identity()
         data = request.json
         article = Article.query.get(article_id)
-        if article:
-            article.title = data.get('title', article.title)
-            article.body = data.get('body', article.body)
-            db.session.commit()
-            return jsonify({'message': 'Article updated successfully'})
-        return jsonify({'message': 'Article not found'}), 404
+        if not article:
+            return jsonify({'message': 'Article not found'}), 404
+        if article.author_id != current_user_id:
+            return jsonify({'message': 'You are not authorized to edit this article'}), 403
+        article.title = data.get('title', article.title)
+        article.body = data.get('body', article.body)
+        db.session.commit()
+        return jsonify({'message': 'Article updated successfully'})
 
 
 class CommentsResource(Resource):
@@ -343,7 +378,6 @@ class LoginResource(Resource):
 
         return {'message': 'Login successful', 'access_token': access_token}, 200
 
-
 class RegisterResource(Resource):
     def post(self):
         data = request.json
@@ -363,6 +397,7 @@ class RegisterResource(Resource):
         db.session.commit()
 
         return {'message': 'User registered successfully'}, 201
+
 
 
 class ArticlesCommentsResource(Resource):
@@ -400,34 +435,6 @@ class UserDataResource(Resource):
             return jsonify({'name': user.name, 'contact': user.contact, 'email': user.email})
         return jsonify({'message': 'User not found'}), 404
 
-# class ArticlesDataResource(Resource):
-#     def get(self):
-#         articles = Article.query.all()
-#         articles_data = []
-
-#         for article in articles:
-#             article_data = {
-#                 'id': article.id,
-#                 'title': article.title,
-#                 'body': article.body,
-#                 'comments': []
-#             }
-#             for comment in article.comments:
-#                 comment_data = {
-#                     'id': comment.id,
-#                     'text': comment.text,
-#                     'user': {  # Include user information for the commenter
-#                         'id': comment.user.id,
-#                         'name': comment.user.name,
-#                         'contact': comment.user.contact,
-#                         'email': comment.user.email
-#                     }
-#                 }
-#                 article_data['comments'].append(comment_data)
-#             articles_data.append(article_data)
-
-#         return jsonify(articles_data)
-
 class ArticlesDataResource(Resource):
     def get(self):
         articles = Article.query.all()
@@ -456,9 +463,58 @@ class ArticlesDataResource(Resource):
             articles_data.append(article_data)
 
         return jsonify(articles_data)
+    
+    
+    
+class AuthorLoginResource(Resource):
+    def post(self):
+        data = request.json
+        email = data.get('email')
+        password = data.get('password')
+
+        if not email or not password:
+            return {'message': 'Email and password are required'}, 400
+
+        author = Author.query.filter_by(email=email).first()
+
+        if not author:
+            return {'message': 'Author not found'}, 404
+
+        if author.password_hash:
+            if not author.check_password(password):
+                return {'message': 'Invalid password'}, 401
+        else:
+            if author.password != password:
+                return {'message': 'Invalid password'}, 401
+
+        access_token = create_access_token(identity=author.id, additional_claims={"username": author.username})
+
+        return {'message': 'Author login successful', 'access_token': access_token}, 200
 
 
+class AuthorRegistrationResource(Resource):
+    def post(self):
+        data = request.json
+        fullname = data.get('fullname')
+        username=data.get('username')
+        email = data.get('email')
+        password = data.get('password')
+        bio = data.get('bio')
+        location = data.get('location')
 
+        existing_author = Author.query.filter_by(email=email).first()
+        if existing_author:
+            return {'message': 'Email is already registered'}, 400
+
+        new_author = Author(fullname=fullname,username=username, email=email, bio=bio, location=location)
+        new_author.set_password(password)
+
+        db.session.add(new_author)
+        db.session.commit()
+
+        return {'message': 'Author registered successfully'}, 201
+
+api.add_resource(AuthorRegistrationResource, '/author/register')
 api.add_resource(HomePage, '/')
 api.add_resource(ArticlesResource, '/articles')
 api.add_resource(ArticleResource, '/articles/<int:article_id>')
@@ -484,6 +540,7 @@ if __name__ == '__main__':
 api.add_resource(ArticlesCommentsResource, '/articles/<int:article_id>/comments')
 api.add_resource(UserDataResource, '/api/user')
 api.add_resource(ArticlesDataResource, '/articleslist')
+api.add_resource(AuthorLoginResource, '/author-login')
 
 
 

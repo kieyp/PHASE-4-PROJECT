@@ -1,17 +1,25 @@
 import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
+import { Link, useHistory } from 'react-router-dom';
 
-const Signin = () => {
+function Signin() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isAuthor, setIsAuthor] = useState(false);
   const [error, setError] = useState('');
-  const history = useHistory(); // useHistory hook to access history object
+  const [successMessage, setSuccessMessage] = useState('');
+  const history = useHistory();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const formData = {
+      email,
+      password,
+    };
 
     try {
+<<<<<<< HEAD
       const response = await axios.post('/login', { email, password });
 <<<<<<< HEAD
       console.log(response.data); // Log the response for debugging
@@ -23,19 +31,26 @@ const Signin = () => {
       localStorage.setItem('accessToken', access_token);
 
       // Redirect to the dashboard route after successful login
+=======
+      const response = await axios.post(isAuthor ? '/author-login' : '/login', formData);
+      console.log('Login response:', response.data);
+      // Display success message
+      setSuccessMessage('Login successful!');
+      // Redirect to dashboard after successful login
+>>>>>>> cf8e906 (Updated login for Author and User separate)
       history.push('/dashboard');
 >>>>>>> e7623f4 (Modifications on all the code)
     } catch (error) {
-      console.error('Error:', error.response.data); // Log the error response for debugging
-      setError('Invalid email or password');
+      console.error('Login failed:', error.response.data);
+      setError('Login failed. Please try again.');
     }
   };
 
   return (
     <div>
       <h2>Sign In</h2>
-      {error && <p>{error}</p>}
-      <form onSubmit={handleLogin}>
+      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+      <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="email">Email:</label>
           <input
@@ -56,9 +71,20 @@ const Signin = () => {
             required
           />
         </div>
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              checked={isAuthor}
+              onChange={() => setIsAuthor(!isAuthor)}
+            />
+            Sign in as an author
+          </label>
+        </div>
         <button type="submit">Sign In</button>
       </form>
-      <p>Don't have an account? <Link to="/register">Register</Link></p>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <p>Not registered? <Link to="/register">Register here</Link></p>
     </div>
   );
 }
