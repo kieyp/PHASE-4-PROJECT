@@ -1,0 +1,89 @@
+/* ArticleForm.css */
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Make the container at least the height of the viewport */
+  padding: 20px;
+}
+
+.author-details {
+  margin-bottom: 20px;
+}
+
+.article-form {
+  margin-bottom: 40px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  font-weight: bold;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.form-textarea {
+  width: 100%;
+  height: 200px; /* Increase the height of the textarea */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+}
+
+.submit-button,
+.logout-button,
+.cancel-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.submit-button.submitting {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.pagination {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  justify-content: center;
+  margin-top: auto; /* Push the pagination to the bottom */
+}
+
+.pagination li {
+  margin: 0 5px;
+}
+
+.pagination button {
+  padding: 5px 10px;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.pagination button:hover {
+  background-color: #f0f0f0;
+}
+
+/* Make articles fill the remaining space */
+.articles {
+  flex: 1;
+  overflow-y: auto; /* Add scrollbar if articles overflow the container */
+}
