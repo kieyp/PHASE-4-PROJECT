@@ -9,13 +9,14 @@ function Register() {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isAuthor, setIsAuthor] = useState(false); // New state for author registration
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      console.log('Submitting registration:', { name, contact, email, password });
-      const response = await axios.post('/register', { name, contact, email, password });
+      console.log('Submitting registration:', { name, contact, email, password, isAuthor });
+      const response = await axios.post('/register', { name, contact, email, password, isAuthor });
       console.log('Registration response:', response.data); // Handle successful registration response
       setMessage('User registered successfully!');
     } catch (error) {
@@ -73,9 +74,20 @@ function Register() {
             {showPassword ? 'Hide' : 'Show'} Password
           </button>
         </div>
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              checked={isAuthor}
+              onChange={() => setIsAuthor(!isAuthor)}
+            />
+            Register as an author
+          </label>
+        </div>
         <button type="submit">Register</button>
       </form>
       <p>Already registered? <Link to="/signin">Login Here</Link></p>
+      {isAuthor && <p>Already an author? <Link to="/create-article">Create New Article</Link></p>}
     </div>
   );
 }
