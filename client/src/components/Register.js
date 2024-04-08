@@ -1,42 +1,64 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; 
 import axios from 'axios';
+import { Link, useHistory } from 'react-router-dom';
 
 function Register() {
-  const [name, setName] = useState('');
+  const [fullname, setFullname] = useState('');
   const [contact, setContact] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [isAuthor, setIsAuthor] = useState(false); // New state for author registration
+  const [bio, setBio] = useState('');
+  const [location, setLocation] = useState('');
+  const [isAuthor, setIsAuthor] = useState(false);
+  const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const history = useHistory();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    if (!fullname || !contact || !email || !password) {
+      setError('Please fill out all required fields');
+      return;
+    }
+
+    const formData = {
+      fullname,
+      contact,
+      email,
+      password,
+      bio: isAuthor ? bio : '', // Only include bio if registering as an Author
+      location: isAuthor ? location : '', // Only include location if registering as an Author
+    };
+
     try {
-      console.log('Submitting registration:', { name, contact, email, password, isAuthor });
-      const response = await axios.post('/register', { name, contact, email, password, isAuthor });
-      console.log('Registration response:', response.data); // Handle successful registration response
-      setMessage('User registered successfully!');
+      const response = await axios.post(isAuthor ? '/author/register' : '/register', formData);
+      console.log('Registration response:', response.data);
+      setSuccessMessage('Registration successful! You can now log in.');
+      // Do not change the history.push('/signin') line
+      history.push('/signin');
     } catch (error) {
-      console.error('Error:', error.response.data); // Handle error response
-      setMessage('Registration failed. Please try again.');
+      console.error('Registration failed:', error.response ? error.response.data : error.message);
+      setError('Registration failed. Please try again.');
     }
   };
 
   return (
     <div>
       <h2>Register</h2>
-      {message && <p>{message}</p>}
+      {successMessage && (
+        <div className="success-message">
+          <p style={{ color: 'green' }}>{successMessage}</p>
+        </div>
+      )}
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="name">Full Name:</label>
+          <label htmlFor="fullname">Full Name:</label>
           <input
             type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            id="fullname"
+            value={fullname}
+            onChange={(e) => setFullname(e.target.value)}
             required
           />
         </div>
@@ -63,16 +85,12 @@ function Register() {
         <div>
           <label htmlFor="password">Password:</label>
           <input
-            type={showPassword ? 'text' : 'password'}
+            type="password"
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <button className={`show-password-btn ${showPassword ? 'active' : ''}`}
-            type="button" onClick={() => setShowPassword(!showPassword)}>
-            {showPassword ? 'Hide' : 'Show'} Password
-          </button>
         </div>
         <div>
           <label>
@@ -84,10 +102,33 @@ function Register() {
             Register as an author
           </label>
         </div>
+        {isAuthor && (
+          <>
+            <div>
+              <label htmlFor="bio">Bio:</label>
+              <textarea
+                id="bio"
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="location">Location:</label>
+              <input
+                type="text"
+                id="location"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                required
+              />
+            </div>
+          </>
+        )}
         <button type="submit">Register</button>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
       </form>
-      <p>Already registered? <Link to="/signin">Login Here</Link></p>
-      {isAuthor && <p>Already an author? <Link to="/create-article">Create New Article</Link></p>}
+      <p>Already have an account? <Link to="/signin">Sign in here</Link></p>
     </div>
   );
 }
