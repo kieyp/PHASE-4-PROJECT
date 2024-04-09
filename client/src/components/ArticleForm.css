@@ -2,34 +2,45 @@
 .container {
   display: flex;
   flex-direction: column;
+  align-items: center; /* Center items horizontally */
   min-height: 100vh;
   padding: 20px;
   background-color: #f9f9f9;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adjusted box shadow */
 }
 
+/* Author Details */
 .author-details {
   margin-bottom: 20px;
+  font-size: 14px; /* Adjusted font size */
+  color: #555; /* Adjusted color */
 }
 
+/* Article Form */
 .article-form {
   margin-bottom: 40px;
+  width: 100%; /* Ensure form takes full width */
+  max-width: 600px; /* Limit form width for better readability */
 }
 
+/* Form Group */
 .form-group {
   margin-bottom: 20px;
 }
 
+/* Form Label */
 .form-label {
   display: block;
   font-weight: bold;
   color: #333;
+  margin-bottom: 8px; /* Adjusted margin */
 }
 
+/* Form Input and Textarea */
 .form-input,
 .form-textarea {
   width: 100%;
-  padding: 12px;
+  padding: 10px; /* Adjusted padding */
   border: 1px solid #ccc;
   border-radius: 5px;
   background-color: #fff;
@@ -47,11 +58,32 @@
   height: 150px;
 }
 
+/* Form Input for Title */
+.form-input.title-input {
+  width: 80%; /* Adjusted width */
+  padding: 10px; /* Adjust padding as needed */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  transition: border-color 0.3s ease;
+  font-size: 20px; /* Decreased font size */
+  height: 50px; /* Adjusted height */
+  line-height: 1.5; /* Ensures text is centered vertically */
+}
+
+/* Focus State for Title Input */
+.form-input.title-input:focus {
+  outline: none;
+  border-color: #66afe9;
+}
+
+/* Button Group */
 .button-group {
   display: flex;
   justify-content: space-between;
 }
 
+/* Buttons */
 .submit-button,
 .logout-button,
 .cancel-button {
@@ -75,6 +107,7 @@
   color: #fff;
 }
 
+/* Pagination */
 .pagination {
   display: flex;
   list-style: none;
@@ -100,7 +133,9 @@
   background-color: #f0f0f0;
 }
 
+/* Articles */
 .articles {
   flex: 1;
   overflow-y: auto;
 }
+

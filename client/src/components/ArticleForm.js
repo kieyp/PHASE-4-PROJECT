@@ -135,7 +135,7 @@ const ArticleForm = () => {
           <form onSubmit={handleSubmit} className="article-form">
             <div className="form-group">
               <label htmlFor="title" className="form-label">Title:</label>
-              <input type="text" id="title" name="title" value={formData.title} onChange={handleChange} className="form-input" required />
+              <input type="text" id="title" name="title" value={formData.title} onChange={handleChange} className="form-input title-input" required />
             </div>
             <div className="form-group">
               <label htmlFor="body" className="form-label">Body:</label>
@@ -150,7 +150,7 @@ const ArticleForm = () => {
           </form>
 
           {/* Display paginated articles */}
-          <h2>Your Articles</h2>
+          <h2>Articles</h2>
           <ul>
             {currentArticles.map((article) => (
               <li key={article.id}>
